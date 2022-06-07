@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 const Home = ({userObj}) => {
     const [nweet, setNweet] = useState("");
     const [nweets, setNweets] = useState([]);
-    const [attachment, setAttechment] = useState();
+    const [attachment, setAttechment] = useState("");
 
     useEffect(() => {
         dbService.collection("nweets").onSnapshot((snapshot) => {
@@ -20,15 +20,26 @@ const Home = ({userObj}) => {
 
     const onSubmit = async (event) => {
         event.preventDefault();
-        // await dbService.collection("nweets").add({
-        //     text: nweet,
-        //     createdAt: Date.now(),
-        //     creatorId: userObj.uid,
-        //     });
-        //     setNweet("");
-        const fileRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`);
-        const response = await fileRef.putString(attachment, "data_url");
-        console.log(response);
+        let attachmentUrl = "";
+        if (attachment != ""){
+            const fileRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`);
+            const response = await fileRef.putString(attachment, "data_url");
+            attachmentUrl = await response.ref.getDownloadURL();
+        }
+        const nweetObj = {
+            text: nweet,
+            createdAt: Date.now(),
+            creatorID: userObj.uid,
+            attachmentUrl,
+        };
+        await dbService.collection("nweets").add({
+            text: nweet,
+            createdAt: Date.now(),
+            creatorId: userObj.uid,
+            });
+        setNweet("");
+        setAttechment("");
+ 
     };
     const onChange = (event) => {
         const {
