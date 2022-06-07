@@ -1,4 +1,4 @@
-const { dbService } = require("fbase");
+const { dbService, storageService } = require("fbase");
 const { useState } = require("react")
 
 const Nweet = ({ nweetObj, isOwner }) => {
@@ -8,6 +8,7 @@ const Nweet = ({ nweetObj, isOwner }) => {
         const ok = window.confirm("Are you sure you want to delete this nweet?");
         if (ok) {
             await dbService.doc(`nweet/${nweetObj.id}`).delete();
+            await storageService.refFromURL(nweetObj.attachmentUrl).delete();
         }
     };
 
@@ -45,8 +46,8 @@ const Nweet = ({ nweetObj, isOwner }) => {
              ) : (
                  <>
                     <h4>{nweetObj.text}</h4>
-                    {nweetObj.attachmentURL && (
-                        <img src={nweetObj.attachmentURL} width="50px" height="50px" />
+                    {nweetObj.attachmentUrl && (
+                        <img src={nweetObj.attachmentUrl} width="50px" height="50px" />
                     )}
                     {isOwner && (
                         <>
