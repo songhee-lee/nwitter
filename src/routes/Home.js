@@ -32,11 +32,7 @@ const Home = ({userObj}) => {
             creatorID: userObj.uid,
             attachmentUrl,
         };
-        await dbService.collection("nweets").add({
-            text: nweet,
-            createdAt: Date.now(),
-            creatorId: userObj.uid,
-            });
+        await dbService.collection("nweets").add({nweetObj});
         setNweet("");
         setAttechment("");
  
