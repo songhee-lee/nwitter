@@ -8,7 +8,9 @@ const Nweet = ({ nweetObj, isOwner }) => {
         const ok = window.confirm("Are you sure you want to delete this nweet?");
         if (ok) {
             await dbService.doc(`nweet/${nweetObj.id}`).delete();
-            await storageService.refFromURL(nweetObj.attachmentUrl).delete();
+            if (nweetObj.attachmentUrl){
+                await storageService.refFromURL(nweetObj.attachmentUrl).delete();
+            }
         }
     };
 

@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 const Home = ({userObj}) => {
     const [nweet, setNweet] = useState("");
     const [nweets, setNweets] = useState([]);
-    const [attachment, setAttechment] = useState("");
+    const [attachment, setAttachment] = useState("");
 
     useEffect(() => {
         dbService.collection("nweets").onSnapshot((snapshot) => {
@@ -29,23 +29,23 @@ const Home = ({userObj}) => {
         const nweetObj = {
             text: nweet,
             createdAt: Date.now(),
-            creatorID: userObj.uid,
+            creatorId: userObj.uid,
             attachmentUrl,
         };
-        await dbService.collection("nweets").add({nweetObj});
+        await dbService.collection("nweets").add(nweetObj);
         setNweet("");
-        setAttechment("");
+        setAttachment("");
  
     };
     const onChange = (event) => {
         const {
-            target : {value},
+            target : { value },
         } = event;
         setNweet(value);
     };
     const onFileChange = (event) => {
         const {
-            target: {files},
+            target: { files },
         } = event;
         const theFile = files[0];
         const reader = new FileReader();
@@ -53,11 +53,11 @@ const Home = ({userObj}) => {
             const {
               currentTarget: { result },
             } = finishedEvent;
-            setAttechment(result);
+            setAttachment(result);
         };
         reader.readAsDataURL(theFile);
     };
-    const onClearAttechment = () => setAttechment(null);
+    const onClearAttachment = () => setAttachment("");
     return (
         <div>
             <form onSubmit={onSubmit}>
@@ -73,7 +73,7 @@ const Home = ({userObj}) => {
                 {attachment && (
                     <div>
                         <img src={attachment} width="50px" height="50px" />
-                        <button onClick={onClearAttechment}>Clear</button>
+                        <button onClick={onClearAttachment}>Clear</button>
                     </div>
                 )}
             </form>
